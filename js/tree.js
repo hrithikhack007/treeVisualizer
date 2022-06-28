@@ -202,7 +202,7 @@ function update(source) {
     .text(function (d) {
       return d.data.name;
     })
-    .style("font-size", "15");
+    .style("font-size", "10");
 
   var nodeUpdate = nodeEnter.merge(node);
 
@@ -215,7 +215,7 @@ function update(source) {
 
   nodeUpdate
     .select("circle.node")
-    .attr("r", 15)
+    .attr("r", 10)
     .style("fill", function (d) {
       return d._children ? "red" : "#fff";
     })
