@@ -3,6 +3,7 @@ var treeData = {
   children: [
     {
       name: "Asia",
+
       children: [
         {
           name: "India",
@@ -132,9 +133,10 @@ var treeData = {
   ],
 };
 
-var margin = { top: 20, right: 90, bottom: 20, left: 400 };
-var width = 1500 - margin.left - margin.right;
-var height = 700 - margin.top - margin.bottom;
+var margin = { top: 50, right: 90, bottom: 20, left: 100 };
+var width = 1700 - margin.left - margin.right;
+var height = 1600 - margin.top - margin.bottom;
+var bottom = 800;
 
 var svg = d3
   .select(".container")
@@ -143,6 +145,11 @@ var svg = d3
   .attr("height", height + margin.top + margin.bottom)
   .append("g")
   .attr("transform", `translate(${margin.left},${margin.top})`);
+
+var colorScale = d3
+  .scaleLinear()
+  .domain([0, 100])
+  .range(["#00FF7F", "#DC143C"]);
 
 var i = 0;
 var duration = 750;
@@ -153,8 +160,8 @@ root = d3.hierarchy(treeData, function (d) {
   return d.children;
 });
 
-root.x0 = height / 2;
-root.y0 = 0;
+root.x0 = width / 2;
+root.y0 = bottom;
 
 // console.log("root", root);
 
@@ -166,7 +173,7 @@ function update(source) {
   // nodes
   var nodes = treeData.descendants();
   nodes.forEach(function (d) {
-    d.y = d.depth * 180;
+    d.y = d.depth * 250;
   });
 
   var node = svg.selectAll("g.node").data(nodes, function (d) {
@@ -178,7 +185,7 @@ function update(source) {
     .append("g")
     .attr("class", "node")
     .attr("transform", function (d) {
-      return `translate(${source.y0},${source.x0})`;
+      return `translate(${source.x0},${bottom - source.y0})`;
     })
     .on("click", click);
 
@@ -186,15 +193,19 @@ function update(source) {
     .append("circle")
     .attr("class", "node")
     .attr("r", 0)
-    .style("fill", function (d) {
-      return d._children ? "red" : "#fff";
-    });
+    .style("fill", () => colorScale(Math.random() * 100));
+  // .style("fill", function (d) {
+  //   return d._children ? "red" : "#fff";
+  // });
 
   nodeEnter
     .append("text")
-    .attr("dy", ".35em")
+    .attr("class", "text")
     .attr("x", function (d) {
-      return d.children || d._children ? -20 : 20;
+      return d.children || d._children ? -15 : -25;
+    })
+    .attr("y", function (d) {
+      return d.children || d._children ? 30 : -30;
     })
     .attr("text-anchor", function (d) {
       return d.children || d._children ? "end" : "start";
@@ -202,7 +213,9 @@ function update(source) {
     .text(function (d) {
       return d.data.name;
     })
-    .style("font-size", "10");
+    .style("font-size", function (d) {
+      return d.children || d._children ? "17px" : "13.4px";
+    });
 
   var nodeUpdate = nodeEnter.merge(node);
 
@@ -210,23 +223,26 @@ function update(source) {
     .transition()
     .duration(duration)
     .attr("transform", function (d) {
-      return `translate(${d.y},${d.x})`;
+      return `translate(${d.x},${bottom - d.y})`;
     });
 
   nodeUpdate
     .select("circle.node")
-    .attr("r", 10)
-    .style("fill", function (d) {
-      return d._children ? "red" : "#fff";
-    })
-    .attr("cursor", "pointer");
+    .attr("r", 20)
+    .style("fill", () => colorScale(Math.random() * 100))
+    // .style("fill", function (d) {
+    //   return d._children ? "red" : "#fff";
+    // })
+    .attr("cursor", function (d) {
+      return d.children || d._children ? "pointer" : "";
+    });
 
   var nodeExit = node
     .exit()
     .transition()
     .duration(duration)
     .attr("transform", function (d) {
-      return `translate(${source.y},${source.x})`;
+      return `translate(${source.x},${bottom - source.y})`;
     })
     .remove();
 
@@ -236,10 +252,10 @@ function update(source) {
   // links
 
   function diagonal(s, d) {
-    var path = `M ${s.y} ${s.x}
-         C ${(s.y + d.y) / 2} ${s.x}
-            ${(s.y + d.y) / 2} ${d.x}
-            ${d.y} ${d.x}
+    var path = `M ${s.x} ${bottom - s.y}
+         C ${(s.x + d.x) / 2} ${bottom - s.y}
+            ${(s.x + d.x) / 2} ${bottom - d.y}
+            ${d.x} ${bottom - d.y}
          `;
     return path;
   }
@@ -252,8 +268,9 @@ function update(source) {
     .enter()
     .insert("path", "g")
     .attr("class", "link")
+    .attr("stroke-opacity", 0.7)
     .attr("d", function (d) {
-      var o = { x: source.x0, y: source.y };
+      var o = { x: source.x0, y: bottom - source.y };
       return diagonal(o, o);
     });
 
@@ -271,7 +288,7 @@ function update(source) {
     .transition()
     .duration(duration)
     .attr("d", function (d) {
-      var o = { x: source.x0, y: source.y0 };
+      var o = { x: source.x0, y: bottom - source.y0 };
       return diagonal(o, o);
     })
     .remove();
@@ -292,3 +309,13 @@ function update(source) {
     update(d);
   }
 }
+
+// d3.select("div.container")
+//   .append("div")
+//   .classed("svg-container", true) //container class to make it responsive
+//   .append("svg")
+//   //responsive SVG needs these 2 attributes and no width and height attr
+//   .attr("preserveAspectRatio", "xMinYMin meet")
+//   .attr("viewBox", "0 0 600 400")
+//   //class to make it responsive
+//   .classed("svg-content-responsive", true);

@@ -1,15 +1,44 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: black;
+}
+
 .node circle {
   fill: #fff;
-  stroke: steelblue;
+  stroke: rgb(155, 189, 217);
   stroke-width: 3px;
 }
 
 .node text {
-  font: 12px sans-serif;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.text {
+  fill: rgb(225, 225, 225);
 }
 
 .link {
   fill: none;
-  stroke: #ccc;
-  stroke-width: 2px;
+  stroke: rgb(178, 80, 80);
+  stroke-width: 12px;
+}
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%; /* aspect ratio */
+  vertical-align: top;
+  overflow: hidden;
+}
+.svg-content-responsive {
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  left: 0;
 }
