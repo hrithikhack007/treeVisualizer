@@ -134,9 +134,9 @@ var treeData = {
 };
 
 var margin = { top: 50, right: 90, bottom: 20, left: 100 };
-var width = 1700 - margin.left - margin.right;
+var width = 1500 - margin.left - margin.right;
 var height = 1600 - margin.top - margin.bottom;
-var bottom = 800;
+var bottom = 700;
 
 var svg = d3
   .select(".container")
