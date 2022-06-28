@@ -25,10 +25,10 @@ body {
 .link {
   fill: none;
   stroke: rgb(178, 80, 80);
-  stroke-width: 12px;
+  stroke-width: 7px;
 }
 
-.svg-container {
+/* .svg-container {
   display: inline-block;
   position: relative;
   width: 100%;
@@ -41,4 +41,4 @@ body {
   position: absolute;
   top: 10px;
   left: 0;
-}
+} */

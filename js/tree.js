@@ -134,9 +134,9 @@ var treeData = {
 };
 
 var margin = { top: 50, right: 90, bottom: 20, left: 100 };
-var width = 1500 - margin.left - margin.right;
-var height = 1600 - margin.top - margin.bottom;
-var bottom = 700;
+var width = 1200 - margin.left - margin.right;
+var height = 1200 - margin.top - margin.bottom;
+var bottom = 550;
 
 var svg = d3
   .select(".container")
@@ -173,7 +173,7 @@ function update(source) {
   // nodes
   var nodes = treeData.descendants();
   nodes.forEach(function (d) {
-    d.y = d.depth * 250;
+    d.y = d.depth * 150;
   });
 
   var node = svg.selectAll("g.node").data(nodes, function (d) {
@@ -202,10 +202,10 @@ function update(source) {
     .append("text")
     .attr("class", "text")
     .attr("x", function (d) {
-      return d.children || d._children ? -15 : -25;
+      return d.children || d._children ? -10 : -20;
     })
     .attr("y", function (d) {
-      return d.children || d._children ? 30 : -30;
+      return d.children || d._children ? 20 : -20;
     })
     .attr("text-anchor", function (d) {
       return d.children || d._children ? "end" : "start";
@@ -214,7 +214,7 @@ function update(source) {
       return d.data.name;
     })
     .style("font-size", function (d) {
-      return d.children || d._children ? "17px" : "13.4px";
+      return d.children || d._children ? "12px" : "10px";
     });
 
   var nodeUpdate = nodeEnter.merge(node);
@@ -228,7 +228,7 @@ function update(source) {
 
   nodeUpdate
     .select("circle.node")
-    .attr("r", 20)
+    .attr("r", 10)
     .style("fill", () => colorScale(Math.random() * 100))
     // .style("fill", function (d) {
     //   return d._children ? "red" : "#fff";
